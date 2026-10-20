@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V. Arjun - Portfolio & Daily Task Manager</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#0f172a',
+                            darkBg: '#0f172a',
+                            cardBg: '#1e293b'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Custom Scrollbar for Desktop feel */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0f172a;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Top Windows-Style Navbar -->
+    <header class="bg-slate-900 border-b border-slate-800 px-4 py-2.5 flex items-center justify-between sticky top-0 z-50 shadow-md">
+        <div class="flex items-center space-x-3">
+            <div class="flex space-x-1.5">
+                <span class="w-3 h-3 bg-red-500 rounded-full inline-block cursor-pointer hover:opacity-80"></span>
+                <span class="w-3 h-3 bg-yellow-500 rounded-full inline-block cursor-pointer hover:opacity-80"></span>
+                <span class="w-3 h-3 bg-green-500 rounded-full inline-block cursor-pointer hover:opacity-80"></span>
+            </div>
+            <span class="text-xs font-semibold text-slate-400 tracking-wider uppercase border-l border-slate-700 pl-3">Arjun Workstation v1.0</span>
+        </div>
+        <div class="flex items-center space-x-4 text-sm text-slate-400">
+            <span id="current-date" class="hidden sm:inline-block font-medium"></span>
+            <span id="current-time" class="bg-slate-800 px-2.5 py-1 rounded text-blue-400 font-mono text-xs border border-slate-700">00:00:00</span>
+        </div>
+    </header>
+
+    <!-- Main Workspace Area -->
+    <main class="flex-1 p-4 md:p-6 max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+        <!-- Left Column: Profile & Target Goals (4 Cols) -->
+        <section class="lg:col-span-4 flex flex-col space-y-6">
+            
+            <!-- Profile Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl relative overflow-hidden group">
+                <div class="absolute -right-10 -top-10 w-32 h-32 bg-blue-600/10 rounded-full blur-2xl group-hover:bg-blue-600/20 transition-all"></div>
+                
+                <div class="flex items-center space-x-4 mb-5">
+                    <div class="relative">
+                        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center text-2xl font-bold text-white shadow-lg border-2 border-slate-700">
+                            VA
+                        </div>
+                        <span class="bottom-0 right-0 absolute w-4 h-4 bg-emerald-500 border-2 border-slate-900 rounded-full"></span>
+                    </div>
+                    <div>
+                        <h1 class="text-xl font-bold text-white tracking-tight">V. Arjun</h1>
+                        <p class="text-xs font-medium text-blue-400 bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20 inline-block mt-1">
+                            1st Year BBA CA
+                        </p>
+                    </div>
+                </div>
+
+                <div class="space-y-3 text-sm text-slate-300 border-t border-slate-800/80 pt-4">
+                    <div class="flex items-start space-x-3">
+                        <i class="fa-solid fa-graduation-cap text-blue-400 mt-1"></i>
+                        <div>
+                            <p class="text-xs text-slate-400">Target Career Aspirations</p>
+                            <p class="font-semibold text-slate-200">MBA in Business Analytics</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fa-solid fa-bullseye text-indigo-400 mt-1"></i>
+                        <div>
+                            <p class="text-xs text-slate-400">Target Entrance Exam</p>
+                            <p class="font-semibold text-slate-200">TANCET (PSG College Goal)</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start space-x-3">
+                        <i class="fa-solid fa-award text-amber-400 mt-1"></i>
+                        <div>
+                            <p class="text-xs text-slate-400">Academic Target</p>
+                            <p class="font-semibold text-slate-200">8.0+ CGPA Target</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills & Tech Stack -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <h2 class="text-md font-bold text-slate-200 mb-4 flex items-center justify-between">
+                    <span><i class="fa-solid fa-code text-blue-500 mr-2"></i>Skills Showcase</span>
+                    <span class="text-xs text-slate-500 font-normal">Active Learning</span>
+                </h2>
+
+                <div class="space-y-4">
+                    <!-- Skill Item -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Advanced Excel & Pivot Tables</span>
+                            <span class="text-blue-400">75%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-blue-500 h-full rounded-full w-[75%]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">SQL & Database Basics</span>
+                            <span class="text-indigo-400">60%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-indigo-500 h-full rounded-full w-[60%]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Business Analytics Tools</span>
+                            <span class="text-teal-400">50%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-teal-500 h-full rounded-full w-[50%]"></div>
+                        </div>
+                    </div>
+
+                    <!-- Skill Item -->
+                    <div>
+                        <div class="flex justify-between text-xs font-semibold mb-1">
+                            <span class="text-slate-300">Content Creation & Video Editing</span>
+                            <span class="text-purple-400">80%</span>
+                        </div>
+                        <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                            <div class="bg-purple-500 h-full rounded-full w-[80%]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TANCET Progress Goal Card -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                <div>
+                    <h3 class="text-sm font-bold text-slate-300 mb-2 flex items-center">
+                        <i class="fa-solid fa-chart-line text-emerald-400 mr-2"></i>TANCET Prep Tracker
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-4">Focus on Data Interpretation, Quantitative Aptitude & Verbal Ability.</p>
+                </div>
+                <div class="flex items-center justify-between bg-slate-800/80 p-3 rounded-xl border border-slate-700/50">
+                    <span class="text-xs text-slate-300 font-medium">Daily Target: 2 Hours Study</span>
+                    <button id="quick-add-tancet" class="px-3 py-1.5 bg-emerald-600/20 text-emerald-400 text-xs font-semibold rounded-lg hover:bg-emerald-600/30 transition border border-emerald-500/30">
+                        + Add Target Task
+                    </button>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Right Column: Interactive Daily Task Manager (8 Cols) -->
+        <section class="lg:col-span-8 flex flex-col space-y-6">
+
+            <!-- Task Workspace Header -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-white flex items-center">
+                            <i class="fa-solid fa-list-check text-blue-500 mr-2.5"></i> Daily Study & Task Tracker
+                        </h2>
+                        <p class="text-xs text-slate-400 mt-1">Organize your daily study routines, college assignments, and analytics prep.</p>
+                    </div>
+                    
+                    <!-- Stats Badges -->
+                    <div class="flex space-x-2">
+                        <div class="bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 text-center min-w-[70px]">
+                            <p class="text-[10px] text-slate-400 uppercase font-bold">Total</p>
+                            <p id="total-count" class="text-base font-bold text-slate-100">0</p>
+                        </div>
+                        <div class="bg-slate-800/80 px-3 py-2 rounded-xl border border-slate-700 text-center min-w-[70px]">
+                            <p class="text-[10px] text-slate-400 uppercase font-bold">Done</p>
+                            <p id="done-count" class="text-base font-bold text-emerald-400">0</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Input Controls -->
+                <form id="task-form" class="flex flex-col sm:flex-row gap-3">
+                    <div class="flex-1 relative">
+                        <input type="text" id="task-input" placeholder="Type new task (e.g. Practice SQL Joins for 30 mins)..." 
+                            class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition">
+                    </div>
+                    <select id="task-category" class="bg-slate-950 border border-slate-700 rounded-xl px-3 py-3 text-sm text-slate-300 focus:outline-none focus:border-blue-500">
+                        <option value="TANCET Prep">TANCET Prep</option>
+                        <option value="College Work">College Assignment</option>
+                        <option value="Analytics Skills">Analytics & Excel</option>
+                        <option value="General">General / Other</option>
+                    </select>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-5 py-3 rounded-xl text-sm transition shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>Add Task</span>
+                    </button>
+                </form>
+
+                <!-- Filter & Action Controls -->
+                <div class="flex flex-wrap items-center justify-between gap-3 mt-6 pt-4 border-t border-slate-800">
+                    <div class="flex space-x-1" id="filter-buttons">
+                        <button data-filter="all" class="filter-btn active px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-600 text-white">All</button>
+                        <button data-filter="pending" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white">Pending</button>
+                        <button data-filter="completed" class="filter-btn px-3 py-1.5 rounded-lg text-xs font-medium bg-slate-800 text-slate-400 hover:text-white">Completed</button>
+                    </div>
+
+                    <button id="clear-completed" class="text-xs text-rose-400 hover:text-rose-300 font-medium transition flex items-center space-x-1">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span>Clear Completed</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Task List Container -->
+            <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-xl flex-1 flex flex-col">
+                <ul id="task-list" class="space-y-3 flex-1">
+                    <!-- Tasks will be rendered here dynamically -->
+                </ul>
+
+                <!-- Empty State -->
+                <div id="empty-state" class="hidden flex-col items-center justify-center py-12 text-center">
+                    <i class="fa-regular fa-clipboard text-4xl text-slate-700 mb-3"></i>
+                    <p class="text-sm font-semibold text-slate-400">No tasks found</p>
+                    <p class="text-xs text-slate-600 mt-1">Add a task above to start tracking your daily progress!</p>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 text-center py-3 text-xs text-slate-500">
+        Designed for V. Arjun • BBA CA Student Desktop Dashboard • 2026
+    </footer>
+
+    <!-- Application Script -->
+    <script>
+        // State Management
+        let tasks = JSON.parse(localStorage.getItem('arjun_tasks')) || [
+            { id: 1, text: 'Study TANCET Quantitative Aptitude (Algebra)', category: 'TANCET Prep', completed: false },
+            { id: 2, text: 'Practice Advanced Excel Pivot Table Functions', category: 'Analytics Skills', completed: true },
+            { id: 3, text: 'Complete BBA CA Semester Assignment', category: 'College Work', completed: false }
+        ];
+
+        let currentFilter = 'all';
+
+        // DOM Elements
+        const taskForm = document.getElementById('task-form');
+        const taskInput = document.getElementById('task-input');
+        const taskCategory = document.getElementById('task-category');
+        const taskList = document.getElementById('task-list');
+        const emptyState = document.getElementById('empty-state');
+        const totalCount = document.getElementById('total-count');
+        const doneCount = document.getElementById('done-count');
+        const clearCompletedBtn = document.getElementById('clear-completed');
+        const quickAddTancetBtn = document.getElementById('quick-add-tancet');
+        const filterButtons = document.querySelectorAll('.filter-btn');
+
+        // Initialize App
+        function init() {
+            updateClock();
+            setInterval(updateClock, 1000);
+            renderTasks();
+            setupEventListeners();
+        }
+
+        // Live Clock Feature
+        function updateClock() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleTimeString();
+            document.getElementById('current-date').textContent = now.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+        }
+
+        // Save to LocalStorage
+        function saveTasks() {
+            localStorage.setItem('arjun_tasks', JSON.stringify(tasks));
+        }
+
+        // Category Badge Styling Helper
+        function getCategoryStyle(category) {
+            switch (category) {
+                case 'TANCET Prep':
+                    return 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                case 'College Work':
+                    return 'bg-amber-500/10 text-amber-400 border-amber-500/20';
+                case 'Analytics Skills':
+                    return 'bg-blue-500/10 text-blue-400 border-blue-500/20';
+                default:
+                    return 'bg-purple-500/10 text-purple-400 border-purple-500/20';
+            }
+        }
+
+        // Render Task Items
+        function renderTasks() {
+            taskList.innerHTML = '';
+
+            const filteredTasks = tasks.filter(task => {
+                if (currentFilter === 'pending') return !task.completed;
+                if (currentFilter === 'completed') return task.completed;
+                return true;
+            });
+
+            if (filteredTasks.length === 0) {
+                emptyState.classList.remove('hidden');
+                emptyState.classList.add('flex');
+            } else {
+                emptyState.classList.add('hidden');
+                emptyState.classList.remove('flex');
+
+                filteredTasks.forEach(task => {
+                    const li = document.createElement('li');
+                    li.className = `flex items-center justify-between p-3.5 rounded-xl border transition group ${
+                        task.completed 
+                            ? 'bg-slate-950/50 border-slate-800/60 opacity-60' 
+                            : 'bg-slate-800/50 border-slate-700/60 hover:border-slate-600'
+                    }`;
+
+                    li.innerHTML = `
+                        <div class="flex items-center space-x-3 flex-1 min-w-0 pr-3">
+                            <button onclick="toggleTask(${task.id})" class="w-5 h-5 rounded-md border flex items-center justify-center transition ${
+                                task.completed 
+                                    ? 'bg-emerald-500 border-emerald-500 text-slate-950' 
+                                    : 'border-slate-600 hover:border-blue-500'
+                            }">
+                                ${task.completed ? '<i class="fa-solid fa-check text-xs font-bold"></i>' : ''}
+                            </button>
+                            <span class="text-sm font-medium ${task.completed ? 'line-through text-slate-500' : 'text-slate-200'} truncate">
+                                ${escapeHtml(task.text)}
+                            </span>
+                        </div>
+                        <div class="flex items-center space-x-3 shrink-0">
+                            <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-md border ${getCategoryStyle(task.category)} hidden sm:inline-block">
+                                ${task.category}
+                            </span>
+                            <button onclick="deleteTask(${task.id})" class="text-slate-500 hover:text-rose-400 p-1 rounded transition opacity-80 group-hover:opacity-100">
+                                <i class="fa-solid fa-trash-can text-sm"></i>
+                            </button>
+                        </div>
+                    `;
+                    taskList.appendChild(li);
+                });
+            }
+
+            // Update Statistics
+            totalCount.textContent = tasks.length;
+            doneCount.textContent = tasks.filter(t => t.completed).length;
+        }
+
+        // Add Task Logic
+        taskForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const text = taskInput.value.trim();
+            if (!text) return;
+
+            const newTask = {
+                id: Date.now(),
+                text: text,
+                category: taskCategory.value,
+                completed: false
+            };
+
+            tasks.unshift(newTask);
+            saveTasks();
+            renderTasks();
+            taskInput.value = '';
+        });
+
+        // Toggle Task Completion
+        window.toggleTask = function(id) {
+            tasks = tasks.map(t => t.id === id ? { ...t, completed: !t.completed } : t);
+            saveTasks();
+            renderTasks();
+        };
+
+        // Delete Task
+        window.deleteTask = function(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            renderTasks();
+        };
+
+        // Filter Buttons Logic
+        filterButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterButtons.forEach(b => {
+                    b.classList.remove('bg-blue-600', 'text-white', 'active');
+                    b.classList.add('bg-slate-800', 'text-slate-400');
+                });
+                btn.classList.add('bg-blue-600', 'text-white', 'active');
+                btn.classList.remove('bg-slate-800', 'text-slate-400');
+
+                currentFilter = btn.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // Clear Completed Tasks
+        clearCompletedBtn.addEventListener('click', () => {
+            tasks = tasks.filter(t => !t.completed);
+            saveTasks();
+            renderTasks();
+        });
+
+        // Quick Add TANCET Task
+        quickAddTancetBtn.addEventListener('click', () => {
+            taskInput.value = 'TANCET Prep: Solve 20 Quant Questions';
+            taskCategory.value = 'TANCET Prep';
+            taskInput.focus();
+        });
+
+        // Security Utility for Text Input
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Run Initialization on Load
+        window.onload = init;
+    </script>
+</body>
+</html>

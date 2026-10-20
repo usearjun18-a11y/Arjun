@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>My Personal Gallery</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#10121a;color:#fff}
+header{padding:24px 16px;text-align:center;background:#202435}
+header h1{margin:0 0 8px;color:#8ea5ff}
+main{max-width:900px;margin:auto;padding:16px}
+.panel{background:#202435;padding:16px;border-radius:14px;margin-bottom:18px}
+input,textarea,select,button{width:100%;padding:12px;margin:6px 0;border:0;border-radius:8px;font-size:16px}
+input,textarea,select{background:#30364a;color:white}
+button{background:#718cff;color:#10121a;font-weight:bold;cursor:pointer}
+#search{background:#252b3d;color:white}
+#gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.item{background:#202435;border-radius:12px;overflow:hidden;min-width:0}
+.item img{width:100%;height:170px;object-fit:cover;display:block;background:#30364a}
+.info{padding:12px;overflow-wrap:anywhere}
+.info h3{margin:4px 0 8px}
+.muted{color:#b7bfd5;font-size:14px}
+.delete{background:#ff6878;color:#200b10}
+@media(min-width:650px){#gallery{grid-template-columns:repeat(3,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header>
+  <h1>📸 My Personal Gallery</h1>
+  <p>My photos • Products • My choices</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>➕ Add New Item</h2>
+    <input id="name" placeholder="Photo or product name" required>
+    <input id="price" placeholder="Price (optional)" inputmode="decimal">
+    <textarea id="desc" placeholder="Description (optional)"></textarea>
+    <select id="type">
+      <option value="favorite">❤️ My Favourite</option>
+      <option value="dislike">👎 Not My Favourite</option>
+      <option value="product">🛍️ Product</option>
+      <option value="other">📌 Other</option>
+    </select>
+    <label for="photo">Choose a photo:</label>
+    <input id="photo" type="file" accept="image/*" required>
+    <button id="addBtn">Save to My Gallery</button>
+    <p id="status" class="muted"></p>
+  </section>
+  <input id="search" placeholder="🔎 Search photos or products...">
+  <select id="filter">
+    <option value="all">All Items</option>
+    <option value="favorite">❤️ Favourites</option>
+    <option value="dislike">👎 Not My Favourites</option>
+    <option value="product">🛍️ Products</option>
+    <option value="other">📌 Other</option>
+  </select>
+  <p id="count" class="muted"></p>
+  <section id="gallery"></section>
+</main>
+<script>
+const DB_NAME = "ArjunGalleryDB";
+let db;
+const $ = id => document.getElementById(id);
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, 1);
+    request.onupgradeneeded = () => request.result.createObjectStore("items", {keyPath:"id",autoIncrement:true});
+    request.onsuccess = () => { db = request.result; resolve(); };
+    request.onerror = () => reject(request.error);
+  });
+}
+function store(mode="readonly") { return db.transaction("items",mode).objectStore("items"); }
+function getAll() {
+  return new Promise((resolve,reject) => {
+    const request=store().getAll();
+    request.onsuccess=()=>resolve(request.result);
+    request.onerror=()=>reject(request.error);
+  });
+}
+function saveItem(item) {
+  return new Promise((resolve,reject) => {
+    const request=store("readwrite").add(item);
+    request.onsuccess=()=>resolve();
+    request.onerror=()=>reject(request.error);
+  });
+}
+function deleteItem(id) {
+  return new Promise((resolve,reject) => {
+    const request=store("readwrite").delete(id);
+    request.onsuccess=()=>resolve();
+    request.onerror=()=>reject(request.error);
+  });
+}
+const labels={favorite:"❤️ My Favourite",dislike:"👎 Not My Favourite",product:"🛍️ Product",other:"📌 Other"};
+async function render() {
+  const items=await getAll();
+  const query=$("search").value.toLowerCase().trim();
+  const filter=$("filter").value;
+  const visible=items.filter(item => (item.name+" "+item.desc+" "+item.price).toLowerCase().includes(query) && (filter==="all"||item.type===filter));
+  $("gallery").replaceChildren();
+  $("count").textContent=visible.length+" item(s)";
+  visible.reverse().forEach(item => {
+    const card=document.createElement("article"); card.className="item";
+    const img=document.createElement("img"); img.src=URL.createObjectURL(item.photo); img.alt=item.name;
+    const info=document.createElement("div"); info.className="info";
+    const title=document.createElement("h3"); title.textContent=item.name;
+    const category=document.createElement("p"); category.className="muted"; category.textContent=labels[item.type];
+    const description=document.createElement("p"); description.textContent=item.desc;
+    const price=document.createElement("p"); price.textContent=item.price?"Price: "+item.price:"";
+    const del=document.createElement("button"); del.className="delete"; del.textContent="Delete";
+    del.onclick=async()=>{if(confirm("Delete this item?")){await deleteItem(item.id);await render();}};
+    info.append(title,category,description,price,del); card.append(img,info); $("gallery").append(card);
+  });
+}
+$("addBtn").onclick=async()=>{
+  const name=$("name").value.trim(); const file=$("photo").files[0];
+  if(!name||!file){$("status").textContent="Enter a name and choose a photo.";return;}
+  if(!file.type.startsWith("image/")){$("status").textContent="Please choose an image file.";return;}
+  $("addBtn").disabled=true; $("status").textContent="Saving...";
+  try{
+    await saveItem({name,price:$("price").value.trim(),desc:$("desc").value.trim(),type:$("type").value,photo:file,created:Date.now()});
+    $("name").value=""; $("price").value=""; $("desc").value=""; $("photo").value="";
+    $("status").textContent="Saved successfully! ✅"; await render();
+  }catch(error){$("status").textContent="Could not save. Check available browser storage.";}
+  finally{$("addBtn").disabled=false;}
+};
+$("search").addEventListener("input",render);
+$("filter").addEventListener("change",render);
+(async()=>{try{await openDB();await render();}catch(error){$("status").textContent="Database unavailable. Try opening the published website in Chrome.";}})();
+</script>
+</body>
+</html>
